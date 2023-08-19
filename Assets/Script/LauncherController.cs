@@ -10,12 +10,17 @@ public class LauncherController : MonoBehaviour
     public float maxTimeHold;
     public float maxForce;
 
+    public Material normalMaterial; // Assign this material in the Inspector
+    public Material maxHoldMaterial; // Assign this material in the Inspector
+
     private Renderer renderer;
     private bool isHold;
 
     private void Start()
     {
         isHold = false;
+        renderer = GetComponent<Renderer>(); // Initialize the renderer
+        renderer.material = normalMaterial; // Set the initial material
     }
 
     private void OnCollisionStay(Collision collision)
@@ -45,11 +50,16 @@ public class LauncherController : MonoBehaviour
         {
             force = Mathf.Lerp(0, maxForce, timeHold / maxTimeHold);
 
+            // Update the color based on hold time
+            float normalizedTime = Mathf.Clamp01(timeHold / maxTimeHold);
+            renderer.material.Lerp(normalMaterial, maxHoldMaterial, normalizedTime);
+
             yield return new WaitForEndOfFrame();
             timeHold += Time.deltaTime;
         }
 
         collider.GetComponent<Rigidbody>().AddForce(Vector3.forward * force);
         isHold = false;
+        renderer.material = normalMaterial; // Reset the material color
     }
 }
