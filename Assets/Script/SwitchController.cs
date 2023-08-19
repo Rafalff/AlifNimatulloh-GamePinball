@@ -17,6 +17,10 @@ public class SwitchController : MonoBehaviour
 
     private SwitchState state;
     private Renderer rendererz;
+    public ScoreManager scoreManager;
+    public float score;
+    public AudioManager audioManager;
+    public VFXManager VFXManager;
 
     private void Start()
     {
@@ -25,7 +29,6 @@ public class SwitchController : MonoBehaviour
         Set(false);
 
         StartCoroutine(BlinkTimerStart(2));
-        Debug.Log("BlinkTimerStart coroutine started.");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -33,7 +36,8 @@ public class SwitchController : MonoBehaviour
         if (other == bola)
         {
             Toggle();
-            Debug.Log("Trigger entered, Toggle method called.");
+            audioManager.PlaySwitchSFX(other.transform.position);
+            VFXManager.PlaySwitchVFX(other.transform.position);
         }
     }
 
@@ -63,6 +67,7 @@ public class SwitchController : MonoBehaviour
         {
             Set(true);
         }
+        scoreManager.AddScore(score);
     }
 
     private IEnumerator Blink(int times)
