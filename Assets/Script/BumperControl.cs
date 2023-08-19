@@ -10,6 +10,8 @@ public class BumperControl : MonoBehaviour
     public Color color;
     private Renderer rendererz;
     private Animator animator;
+    public AudioManager audioManager;
+    public VFXManager VFXManager;
 
 
     private void Start()
@@ -29,6 +31,8 @@ public class BumperControl : MonoBehaviour
             Rigidbody bolaRig = bola.GetComponent<Rigidbody>();
             bolaRig.velocity *= multiplier;
             animator.SetTrigger("Hit");
+            audioManager.PlaySFX(collision.transform.position);
+            VFXManager.PlayVFX(collision.transform.position);
         }
     }
 }
